@@ -1,0 +1,16 @@
+<script>
+
+let count = $s(0)
+let count1 = $s([''])
+let derived=$d(()=>count.get()+1)
+let derived2=$d(()=>count1.get())
+$e(()=>{
+    console.log(count.get())
+})
+$e(()=>{
+    const a=derived.get()
+    count1.set([a])
+    console.log(derived2.get())
+})
+</script>
+
