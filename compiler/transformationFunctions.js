@@ -1,25 +1,44 @@
-function $s(initialValue){
-    let value=initialValue
-    const subscribers=[]
+let currentFunction=null
+
+function $s(v){
+    let value=v
+    const subscribers= new Set()
 
     return {
 
-    get: ()=>value,
+    get: ()=>{
+        if(currentFunction){
+            subscribers.add(currentFunction)
+        }
+
+        return value
+    },
     set:(v)=>{
         value=v
         subscribers.forEach(fn=>fn())
     },
     subscribe:(fn)=>{
-          subscribers.push(fn)
+          subscribers.add(fn)
+          return ()=>subscribers.delete(fn)
     }
     }
 }
 
-const $d=(fn)=>({
-    get:() => fn(),
-})
+function $e(fn){
+    currentFunction=fn
+    fn();
+    currentFunction=null
+}
 
+function $d(fn){
+    const value=$s(fn())
+    
+    $e(()=>{
+        value.set(fn())
+    })
 
-const $e=(fn)=>({
-    get:() =>fn(),
-})
+    return{
+        get:()=>value.get(),
+    }
+
+}
