@@ -1,6 +1,6 @@
 let currentFunction=null
 
-function $s(v){
+export function $s(v){
     let value=v
     const subscribers= new Set()
 
@@ -24,13 +24,13 @@ function $s(v){
     }
 }
 
-function $e(fn){
+export function $e(fn){
     currentFunction=fn
     fn();
     currentFunction=null
 }
 
-function $d(fn){
+export function $d(fn){
     const value=$s(fn())
     
     $e(()=>{
@@ -38,7 +38,9 @@ function $d(fn){
     })
 
     return{
-        get:()=>value.get(),
+        get:()=>{
+            return value.get()
+        },
     }
 
 }
